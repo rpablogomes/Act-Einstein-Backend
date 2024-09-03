@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_USER: einstein-db
+      POSTGRES_PASSWORD: einstein
+      POSTGRES_DB: einstein-db  
+    ports:
+      - "5432:5432"
+  
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: development
+    environment:
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: einstein-db
+      POSTGRES_PASSWORD: einstein 
+      POSTGRES_DB: einstein-db    
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: yarn start:dev
