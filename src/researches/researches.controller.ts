@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ResearchesService } from './researches.service';
 import { CreateResearchDto } from './dto/create-research.dto';
 import { UpdateResearchDto } from './dto/update-research.dto';
@@ -10,27 +18,58 @@ export class ResearchesController {
   constructor(private readonly researchesService: ResearchesService) {}
 
   @Post()
-  create(@Body() createResearchDto: CreateResearchDto) {
-    return this.researchesService.create(createResearchDto);
+  async create(@Body() createResearchDto: CreateResearchDto) {
+    try {
+      return await this.researchesService.create(createResearchDto);
+    } catch (error) {
+      return 'Error: ' + error;
+    }
   }
 
   @Get()
-  findAll() {
-    return this.researchesService.findAll();
+  async findAll() {
+    try {
+      return await this.researchesService.findAll();
+    } catch (error) {
+      return 'Error: ' + error;
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.researchesService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    try {
+      const research = await this.researchesService.findOne(+id);
+
+      if (!research) {
+        return 'Não existe';
+      }
+
+      return research;
+    } catch (error) {
+      return 'Error: ' + error;
+    }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateResearchDto: UpdateResearchDto) {
-    return this.researchesService.update(+id, updateResearchDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateResearchDto: UpdateResearchDto,
+  ) {
+    try {
+      await this.researchesService.update(+id, updateResearchDto);
+      return id;
+    } catch (error) {
+      return 'Error: ' + error;
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.researchesService.remove(+id);
+  async remove(@Param('id') id: string) {
+    try {
+      await this.researchesService.remove(+id);
+      return 'removido com sucesso';
+    } catch (error) {
+      return 'Error: ' + error;
+    }
   }
 }

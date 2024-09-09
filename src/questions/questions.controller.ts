@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
@@ -11,26 +20,53 @@ export class QuestionsController {
 
   @Post()
   async create(@Body() createQuestionDto: CreateQuestionDto) {
-     return this.questionsService.create(createQuestionDto)
+    try {
+      const question_id = await this.questionsService.create(createQuestionDto);
+      return { question_id };
+    } catch (error) {
+      return 'Erro:' + error
+    }
   }
 
   @Get()
-  findAll() {
-    return this.questionsService.findAll();
+  async findAll() {
+    try {
+      return await this.questionsService.findAll();
+    } catch (error) {
+      return 'Erro:' + error
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.questionsService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    try {
+      const question = await this.questionsService.findOne(+id);
+      return question;
+    } catch (error) {
+      return 'Erro:' + error
+    }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateQuestionDto: UpdateQuestionDto) {
-    return this.questionsService.update(+id, updateQuestionDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateQuestionDto: UpdateQuestionDto,
+  ) {
+    try {
+      await this.questionsService.update(+id, updateQuestionDto);
+      return { message: 'Atualizada com sucesso' };
+    } catch (error) {
+      return 'Erro:' + error
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.questionsService.remove(+id);
+  async remove(@Param('id') id: string) {
+    try {
+      const result = await this.questionsService.remove(+id);
+      return { message: 'removido com sucesso' };
+    } catch (error) {
+      return 'Erro:' + error
+    }
   }
 }

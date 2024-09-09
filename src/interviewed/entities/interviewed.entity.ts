@@ -15,7 +15,9 @@ export class Interviewed {
   @Column({ type: 'int', width: 1 })
   stars: number;
 
-  @OneToMany(() => ResponseQuestionsInterviewed, (response) => response.interviewed)
+  @OneToMany(
+    () => ResponseQuestionsInterviewed,
+    (response) => response.interviewed,
+  )
   answers: ResponseQuestionsInterviewed[];
 }
-
