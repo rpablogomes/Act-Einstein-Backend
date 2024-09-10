@@ -102,9 +102,9 @@ describe('QuestionsController', () => {
       };
       jest.spyOn(service, 'update').mockResolvedValue(undefined);
 
-      expect(await controller.update('1', updateQuestionDto)).toEqual({
-        message: 'Atualizada com sucesso',
-      });
+      expect(await controller.update('1', updateQuestionDto)).toEqual(
+        'Atualizada com sucesso',
+      );
     });
 
     it('should handle errors', async () => {
@@ -125,9 +125,7 @@ describe('QuestionsController', () => {
     it('should remove a question', async () => {
       jest.spyOn(service, 'remove').mockResolvedValue(undefined);
 
-      expect(await controller.remove('1')).toEqual({
-        message: 'removido com sucesso',
-      });
+      expect(await controller.remove('1')).toEqual('removido com sucesso');
     });
 
     it('should handle errors', async () => {

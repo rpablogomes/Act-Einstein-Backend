@@ -54,7 +54,7 @@ export class QuestionsController {
   ) {
     try {
       await this.questionsService.update(+id, updateQuestionDto);
-      return { message: 'Atualizada com sucesso' };
+      return 'Atualizada com sucesso';
     } catch (error) {
       return 'Erro:' + error;
     }
@@ -64,7 +64,7 @@ export class QuestionsController {
   async remove(@Param('id') id: string) {
     try {
       const result = await this.questionsService.remove(+id);
-      return { message: 'removido com sucesso' };
+      return 'removido com sucesso';
     } catch (error) {
       return 'Erro:' + error;
     }
