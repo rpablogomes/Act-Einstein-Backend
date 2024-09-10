@@ -22,7 +22,7 @@ export class InterviewedController {
     try {
       const interviewed_id =
         await this.interviewedService.create(createInterviewedDto);
-      return { interviewed_id };
+      return interviewed_id;
     } catch (error) {
       return 'Erro:' + error;
     }
@@ -43,7 +43,7 @@ export class InterviewedController {
       const interviewed = await this.interviewedService.findOne(+id);
       return interviewed;
     } catch (error) {
-      console.error('Erro', error);
+      return 'Erro:' + error;
     }
   }
 

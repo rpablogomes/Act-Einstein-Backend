@@ -1,4 +1,6 @@
-import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+} from '@nestjs/common';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,15 +13,14 @@ export class QuestionsService {
     @InjectRepository(Questions)
     private readonly questionsRepository: Repository<Questions>,
   ) {}
-  
-  async create(createQuestionDto: CreateQuestionDto): Promise<number> {
+
+  async create(createQuestionDto: CreateQuestionDto): Promise<number | string> {
     try {
       const question = this.questionsRepository.create(createQuestionDto);
       const result = await this.questionsRepository.save(question);
       return result.question_id;
     } catch (error) {
-      console.error('Error creating question:', error);
-      throw new InternalServerErrorException('Pergunta não adicionada');
+      return 'Erro: ' + error;
     }
   }
 
@@ -27,31 +28,34 @@ export class QuestionsService {
     return this.questionsRepository.find();
   }
 
-  async findOne(question_id: number): Promise<Questions> {
+  async findOne(question_id: number): Promise<Questions | string> {
     const question = await this.questionsRepository.findOne({
       where: { question_id },
     });
     if (!question) {
-      throw new NotFoundException(`Question with ID ${question_id} not found`);
+      return 'Não existe';
     }
     return question;
   }
 
-  async update(question_id: number, updateQuestionDto: UpdateQuestionDto): Promise<void> {
+  async update(
+    question_id: number,
+    updateQuestionDto: UpdateQuestionDto,
+  ): Promise<void | string> {
     const question = await this.questionsRepository.preload({
       question_id,
       ...updateQuestionDto,
     });
     if (!question) {
-      throw new NotFoundException(`Question with ID ${question_id} not found`);
+      return 'Não existe essa pergunta';
     }
     await this.questionsRepository.save(question);
   }
 
-  async remove(question_id: number): Promise<void> {
+  async remove(question_id: number): Promise<void | string> {
     const result = await this.questionsRepository.delete(question_id);
     if (result.affected === 0) {
-      throw new NotFoundException(`Question with ID ${question_id} not found`);
+      return 'Não removido';
     }
   }
 }

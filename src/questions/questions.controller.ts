@@ -22,9 +22,9 @@ export class QuestionsController {
   async create(@Body() createQuestionDto: CreateQuestionDto) {
     try {
       const question_id = await this.questionsService.create(createQuestionDto);
-      return { question_id };
+      return question_id;
     } catch (error) {
-      return 'Erro:' + error
+      return 'Erro:' + error;
     }
   }
 
@@ -33,7 +33,7 @@ export class QuestionsController {
     try {
       return await this.questionsService.findAll();
     } catch (error) {
-      return 'Erro:' + error
+      return 'Erro:' + error;
     }
   }
 
@@ -43,7 +43,7 @@ export class QuestionsController {
       const question = await this.questionsService.findOne(+id);
       return question;
     } catch (error) {
-      return 'Erro:' + error
+      return 'Erro:' + error;
     }
   }
 
@@ -56,7 +56,7 @@ export class QuestionsController {
       await this.questionsService.update(+id, updateQuestionDto);
       return { message: 'Atualizada com sucesso' };
     } catch (error) {
-      return 'Erro:' + error
+      return 'Erro:' + error;
     }
   }
 
@@ -66,7 +66,7 @@ export class QuestionsController {
       const result = await this.questionsService.remove(+id);
       return { message: 'removido com sucesso' };
     } catch (error) {
-      return 'Erro:' + error
+      return 'Erro:' + error;
     }
   }
 }
