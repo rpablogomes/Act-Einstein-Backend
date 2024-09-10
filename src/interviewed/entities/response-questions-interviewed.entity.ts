@@ -1,19 +1,27 @@
-import { Entity, PrimaryColumn, ManyToOne, Column, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryColumn,
+  ManyToOne,
+  Column,
+  JoinColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Interviewed } from './interviewed.entity';
-import { Researches } from 'src/researches/entities/researches.entity';
-import { Questions } from 'src/questions/entities/questions.entity';
-
+import { Researches } from '../../researches/entities/researches.entity';
+import { Questions } from '../../questions/entities/questions.entity';
 
 @Entity('response_questions_interviewed')
-
 export class ResponseQuestionsInterviewed {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
+  response_questions_interviewed_id: number;
+
+  @Column()
   interviewed_id: number;
 
-  @PrimaryColumn()
+  @Column()
   research_id: number;
 
-  @PrimaryColumn()
+  @Column()
   question_id: number;
 
   @Column({ type: 'text' })
@@ -21,11 +29,11 @@ export class ResponseQuestionsInterviewed {
 
   @ManyToOne(() => Interviewed, (interviewed) => interviewed.answers)
   @JoinColumn({ name: 'interviewed_id' })
-  interviewed?: Interviewed;
+  interviewed: Interviewed;
 
-  @ManyToOne(() => Researches, (research) => research.research_id)
+  @ManyToOne(() => Researches, (research) => research.responses)
   @JoinColumn({ name: 'research_id' })
-  research: Researches
+  research: Researches;
 
   @ManyToOne(() => Questions, (question) => question.question_id)
   @JoinColumn({ name: 'question_id' })

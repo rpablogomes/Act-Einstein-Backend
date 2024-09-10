@@ -13,14 +13,15 @@ export class ResearchesService {
   ) {}
 
   async create(createResearchDto: CreateResearchDto) {
-      const data = {
-        title: createResearchDto.title,
-        questions: createResearchDto.questions_ids.map((question_id) => ({ question_id })),
-      }
-      const research = this.researchRepository.create(data);
-      const {research_id} = await this.researchRepository.save(research);
-      return research_id;
-
+    const data = {
+      title: createResearchDto.title,
+      questions: createResearchDto.questions_ids.map((question_id) => ({
+        question_id,
+      })),
+    };
+    const research = this.researchRepository.create(data);
+    const { research_id } = await this.researchRepository.save(research);
+    return research_id;
   }
 
   async findAll() {
@@ -34,7 +35,11 @@ export class ResearchesService {
       where: { research_id },
       relations: ['questions'],
     });
-    return research;
+    return {
+      research_id: research.research_id,
+      title: research.title,
+      questions: research.questions,
+    };
   }
 
   async update(research_id: number, updateResearchDto: UpdateResearchDto) {
@@ -42,13 +47,15 @@ export class ResearchesService {
       const data = {
         research_id,
         title: updateResearchDto.title,
-        questions: updateResearchDto.questions_ids.map((question_id) => ({ question_id })),
-      }
+        questions: updateResearchDto.questions_ids.map((question_id) => ({
+          question_id,
+        })),
+      };
       const research = await this.researchRepository.preload(data);
       await this.researchRepository.save(research);
       return research_id;
     } catch (error) {
-      throw new Error('Error updating research');
+      return error;
     }
   }
 

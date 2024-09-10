@@ -29,4 +29,18 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    command: yarn start:dev
+    command: sh -c "yarn run migration:generate dist/src/migrations/data && yarn run migration:run && yarn start:dev"
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: test
+    environment:
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: einstein-db
+      POSTGRES_PASSWORD: einstein 
+      POSTGRES_DB: einstein-db    
+    depends_on:
+      - postgres
+    command: sh -c "yarn test"
